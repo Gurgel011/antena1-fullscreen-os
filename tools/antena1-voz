@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+exec /home/paulo/esp32-projects/antena1-fullscreen-os/tools/voice_to_codex.py --no-reset --codex --loop "$@"
