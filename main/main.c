@@ -20,13 +20,31 @@
 #include "lvgl.h"
 #include "nvs_flash.h"
 
+// Wi-Fi e endereco do servidor de tokens ficam em local_secrets.h, que NAO e
+// versionado. Copie main/local_secrets.h.example para main/local_secrets.h e
+// preencha com os valores da sua instalacao. Ver README.md.
+#if __has_include("local_secrets.h")
+#include "local_secrets.h"
+#endif
+
+#ifndef DEFAULT_WIFI_SSID
+#define DEFAULT_WIFI_SSID "CONFIGURE_WIFI_SSID"
+#endif
+#ifndef DEFAULT_WIFI_PASS
+#define DEFAULT_WIFI_PASS "CONFIGURE_WIFI_PASSWORD"
+#endif
+#ifndef TOKEN_USAGE_HOST
+#define TOKEN_USAGE_HOST "127.0.0.1"
+#endif
+#ifndef TOKEN_USAGE_PORT
+#define TOKEN_USAGE_PORT "8787"
+#endif
+
 #define TAG "antena1_touch_radio"
 #define RADIO_STREAM_URL "http://antena1.newradio.it/stream.aac"
 #define RADIO_MAX_RETRIES 1000
-#define DEFAULT_WIFI_SSID "Antena  1  94.7  FM"
-#define DEFAULT_WIFI_PASS "nat13server13"
 #define WIFI_CONNECTED_BIT BIT0
-#define TOKEN_USAGE_URL "http://192.168.2.160:8787/usage"
+#define TOKEN_USAGE_URL "http://" TOKEN_USAGE_HOST ":" TOKEN_USAGE_PORT "/usage"
 #define TOKEN_USAGE_POLL_MS 30000
 #define TOKEN_USAGE_HTTP_TIMEOUT_MS 4000
 

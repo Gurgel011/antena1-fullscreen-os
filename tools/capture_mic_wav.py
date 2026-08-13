@@ -4,10 +4,12 @@ import os
 import sys
 import termios
 import time
+from pathlib import Path
 
-
-PORT = "/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_A4:CB:8F:D6:4E:68-if00"
-OUT = "/home/paulo/Downloads/esp32_mic_capture.wav"
+# Porta serial: ajuste para o seu aparelho, ou passe como primeiro argumento.
+# Descubra a sua com: ls /dev/serial/by-id/
+PORT = os.environ.get("ANTENA1_SERIAL_PORT", "/dev/ttyACM0")
+OUT = str(Path(__file__).resolve().parent.parent / "tmp" / "esp32_mic_capture.wav")
 
 
 def configure_raw(fd):
@@ -24,6 +26,7 @@ def configure_raw(fd):
 def main():
     port = sys.argv[1] if len(sys.argv) > 1 else PORT
     out = sys.argv[2] if len(sys.argv) > 2 else OUT
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
 
     fd = os.open(port, os.O_RDWR | os.O_NOCTTY)
     configure_raw(fd)

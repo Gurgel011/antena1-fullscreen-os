@@ -4,3 +4,12 @@ sdkconfig
 sdkconfig.old
 sdkconfig.pre-reset-*
 *.map
+
+# Configuração local: contém a senha do Wi-Fi em texto claro.
+main/local_secrets.h
+
+# Arquivos temporários gerados pelas ferramentas de voz
+/tmp/
+
+__pycache__/
+*.pyc

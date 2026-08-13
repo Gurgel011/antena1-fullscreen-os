@@ -9,12 +9,15 @@ from pathlib import Path
 from faster_whisper import WhisperModel
 
 
-PORT = "/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_A4:CB:8F:D6:4E:68-if00"
-ROOT = Path("/home/paulo/esp32-projects/antena1-fullscreen-os")
-RAW_WAV = Path("/home/paulo/Downloads/esp32_voice_raw.wav")
-LOUD_WAV = Path("/home/paulo/Downloads/esp32_voice_loud.wav")
-CODEX_LOG = Path("/home/paulo/Downloads/codex_voz_ultimo.log")
-MODEL_ROOT = Path("/home/paulo/.cache/huggingface/hub/models--Systran--faster-whisper-small/snapshots")
+# Porta serial: ajuste para o seu aparelho, ou passe --port.
+# Descubra a sua com: ls /dev/serial/by-id/
+PORT = os.environ.get("ANTENA1_SERIAL_PORT", "/dev/ttyACM0")
+ROOT = Path(__file__).resolve().parent.parent
+TMP_DIR = ROOT / "tmp"
+RAW_WAV = TMP_DIR / "esp32_voice_raw.wav"
+LOUD_WAV = TMP_DIR / "esp32_voice_loud.wav"
+CODEX_LOG = TMP_DIR / "codex_voz_ultimo.log"
+MODEL_ROOT = Path.home() / ".cache/huggingface/hub/models--Systran--faster-whisper-small/snapshots"
 
 
 def status(text):
@@ -186,14 +189,12 @@ def send_to_codex(text):
     prompt = (
         "Pedido recebido por audio transcrito.\n\n"
         "Contexto fixo desta maquina:\n"
-        "- O projeto principal do aparelho ESP32-S3 Touch AMOLED esta em "
-        "/home/paulo/esp32-projects/antena1-fullscreen-os.\n"
+        f"- O projeto principal do aparelho ESP32-S3 Touch AMOLED esta em {ROOT}.\n"
         "- Quando o pedido mencionar tela, aparelho, logo, Antena 1, radio, microfone, voz, "
         "firmware ou ESP32, assuma esse projeto como alvo.\n"
         "- O logo atual esta em main/antena1_logo.c e main/antena1_logo.h.\n"
         "- A UI principal esta em main/main.c.\n"
-        "- Para gravar no aparelho, use a porta "
-        "/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_A4:CB:8F:D6:4E:68-if00.\n"
+        f"- Para gravar no aparelho, use a porta {PORT}.\n"
         "- Se o pedido for razoavelmente claro, tome decisoes praticas e execute; "
         "nao peca caminho de arquivo que ja esta definido acima.\n"
         "- So deixe de executar se a transcricao estiver vazia, incoerente, perigosa, "
@@ -213,7 +214,7 @@ def send_to_codex(text):
         "codex",
         "exec",
         "--cd",
-        "/home/paulo/esp32-projects/antena1-fullscreen-os",
+        str(ROOT),
         "--skip-git-repo-check",
         "--dangerously-bypass-approvals-and-sandbox",
         prompt,
@@ -264,6 +265,7 @@ def main():
 
     raw = Path(args.raw)
     loud = Path(args.loud)
+    TMP_DIR.mkdir(parents=True, exist_ok=True)
 
     if not args.no_reset:
         reset_device(args.port)
