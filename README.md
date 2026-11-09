@@ -1,4 +1,8 @@
-# Antena 1 Fullscreen OS
+# Antena 1 · Fullscreen OS
+
+`ESP32-S3` · `ESP-IDF` · `C` · `LVGL 9` · `AMOLED`
+
+[Funcionalidades](#o-que-o-firmware-faz) · [Configuração](#configuração) · [Build](#build-e-flash) · [← Todos os projetos](https://github.com/Gurgel011#projetos)
 
 Firmware ESP32-S3 pra tela AMOLED da Waveshare, dedicado ao rádio Antena 1: toca o stream ao vivo direto no aparelho, mostra status de wifi/volume, um rosto de robô animado e uma barra com o consumo de tokens do Claude Code.
 
